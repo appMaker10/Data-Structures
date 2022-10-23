@@ -1,0 +1,75 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
+        
+        if(root == null || target == null) return new ArrayList<Integer>();
+        
+        if(k == 0) {
+            List<Integer> result = new ArrayList<Integer>();
+            result.add(target.val);
+            return result;
+        }
+        
+        ArrayList<TreeNode> path = nodeToRootPath(root, target);
+         System.out.println(path.get(0).val);
+        List<Integer> result = new ArrayList<Integer>();
+        
+        for(int i = 0; i<path.size(); i++){
+            kLevelDown(path.get(i), k - i, i==0?null:path.get(i-1), result);
+            System.out.println(result);
+            
+        }
+        return result;
+    }
+    
+    public ArrayList<TreeNode> nodeToRootPath(TreeNode root, TreeNode node){
+        
+        if(root == null){
+            return new ArrayList<TreeNode>();
+        
+        }
+        if(root.val == node.val){
+            ArrayList<TreeNode> arr = new ArrayList<TreeNode>();
+            arr.add(root);
+            return arr;
+        } 
+        
+        ArrayList<TreeNode> left = nodeToRootPath(root.left, node);
+        if(left.size() > 0) {
+            left.add(root);
+            return left;
+        }
+        
+        ArrayList<TreeNode> right = nodeToRootPath(root.right, node);
+        if(right.size() > 0){
+            right.add(root);
+            return right;
+        } 
+        
+        return new ArrayList<>();
+        
+    }
+    
+    public void kLevelDown(TreeNode node, int k, TreeNode blocker, List<Integer> result){
+        if(node == null || k < 0  || node == blocker){
+            return;
+        }
+        if(k == 0)
+            result.add(node.val);
+        
+        kLevelDown(node.left, k-1, blocker, result);
+        kLevelDown(node.right, k-1, blocker, result);
+        
+    
+    }
+    
+    
+}
